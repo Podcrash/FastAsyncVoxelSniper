@@ -1,8 +1,10 @@
 package com.thevoxelbox.voxelsniper.util;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extent.Extent;
 import com.sk89q.worldedit.extent.NullExtent;
 import com.sk89q.worldedit.function.mask.BlockMask;
+import com.sk89q.worldedit.function.mask.BlockMaskBuilder;
 import com.sk89q.worldedit.world.block.BlockState;
 import org.bukkit.block.data.BlockData;
 
@@ -11,7 +13,8 @@ import org.bukkit.block.data.BlockData;
  */
 public class VoxelList {
 
-    private BlockMask mask = new BlockMask(new NullExtent());
+    private Extent extent = new NullExtent();
+    private BlockMask mask = new BlockMaskBuilder().build(extent);
 
     /**
      * Adds the specified id, data value pair to the VoxelList. A data value of -1 will operate on all data values of that id.
@@ -19,7 +22,7 @@ public class VoxelList {
      * @param i
      */
     public void add(BlockState i) {
-        this.mask = mask.add(i);
+        this.mask = mask.toBuilder().add(i).build(extent);
     }
 
     public void add(BlockMask mask) {
@@ -32,7 +35,7 @@ public class VoxelList {
      * @return true if this list contained the specified element
      */
     public boolean removeValue(final BlockState state) {
-        this.mask = mask.remove(state);
+        this.mask = mask.toBuilder().remove(state).build(extent);
         return true;
     }
 
@@ -53,7 +56,7 @@ public class VoxelList {
      * Clears the VoxelList.
      */
     public void clear() {
-        mask = mask.clear();
+        mask = mask.toBuilder().clear().build(extent);
     }
 
     /**
@@ -62,7 +65,7 @@ public class VoxelList {
      * @return true if this list contains no elements
      */
     public boolean isEmpty() {
-        return mask.isEmpty();
+        return mask.toBuilder().isEmpty();
     }
 
     /**

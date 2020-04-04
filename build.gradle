@@ -1,111 +1,29 @@
-import org.ajoberstar.grgit.Grgit
-
-buildscript {
-    repositories {
-        mavenCentral()
-        maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
-        jcenter()
-    }
-
-    configurations.all {
-        resolutionStrategy {
-            force 'commons-io:commons-io:2.4'
-        }
-    }
-
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:5.0.0'
-        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.8.1'
-    }
-}
-
 plugins {
     id 'java'
-    id 'maven'
-    id 'org.ajoberstar.grgit' version '3.1.1'
     id 'com.github.johnrengelman.shadow' version '5.1.0'
 }
 
 group = 'com.thevoxelbox.voxelsniper'
 
-def rootVersion = "1.14"
-def revision = ""
-def buildNumber = ""
-def date = ""
-ext {
-    git = Grgit.open(dir: new File(rootDir.toString()+'/.git'))
-    date = git.head().getDate().format("yy.MM.dd")
-    revision = "-${git.head().abbreviatedId}"
-    parents = git.head().parentIds;
-    if (project.hasProperty('buildnumber')) {
-        buildNumber = "$buildnumber"
-    } else {
-        index = -2109;  // Offset to match CI
-        for (; parents != null && !parents.isEmpty(); index++) {
-            parents = git.getResolve().toCommit(parents.get(0)).getParentIds()
-        }
-        buildNumber = "${index}"
-    }
-}
-
-version = String.format("%s-%s", rootVersion, buildNumber)
-
 repositories {
     mavenCentral()
-    maven { url 'https://ci.athion.net/job/FastAsyncWorldEdit-1.14/ws/mvn' }
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-    maven { url "http://repo.maven.apache.org/maven2" }
-    // Fawe
-    maven { url "https://mvnrepository.com/artifact/" }
-    maven { url "https://repo.destroystokyo.com/repository/maven-public//" }
-    mavenLocal()
-    maven { url "http://empcraft.com/maven2" }
-    maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
-    maven { url "http://maven.sk89q.com/artifactory/repo" }
-    maven { url "http://ci.emc.gs/nexus/content/groups/aikar/" }
-    ivy {
-        url 'https://ci.athion.net/job'
-        layout 'pattern', {
-            artifact '/[organisation]/[module]/artifact/[revision].[ext]'
-        }
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
     }
 }
 
 dependencies {
-    compile 'com.boydti:fawe-api:latest'
-    compile 'com.boydti:fawe-bukkit:latest'
-    compile 'com.martiansoftware:jsap:2.1'
-    compile 'com.destroystokyo.paper:paper-api:1.14.4-R0.1-SNAPSHOT'
-    implementation('io.papermc:paperlib:1.0.2'){transitive = false}
-    compile 'org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT'
-    compile 'BuildTools:lastSuccessfulBuild:spigot-1.14.4@jar'
-    implementation('com.thevoxelbox.voxelsniper:voxelsniper:5.171.0'){transitive = false}
-    compileOnly 'org.jetbrains:annotations:17.0.0'
+    compileOnly files('libs/FastAsyncWorldEdit-bukkit-1.13.170.jar')
+    compileOnly 'org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT'
+    implementation 'org.jetbrains:annotations:19.0.0'
+    implementation 'com.martiansoftware:jsap:2.1'
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-clean.doFirst {
-    delete "./target"
+ext {
+    version = project.version;
 }
 
-processResources {
-    from('src/main/resources') {
-        include 'plugin.yml'
-        expand(
-                name: project.name,
-                version: project.version
-        )
-    }
-}
-
-shadowJar {
-    dependencies {
-        include(dependency('com.martiansoftware:jsap:2.1'))
-    }
-    archiveFileName  = "FastAsyncVoxelSniper-${project.version}.jar"
-    jar.destinationDirectory  = file('./target')
-}
-
-build.dependsOn(shadowJar)
+tasks.build.dependsOn tasks.shadowJar
