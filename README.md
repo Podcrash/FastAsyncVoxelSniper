@@ -2,11 +2,11 @@
 
 Compiled against FastAsyncWorldEdit 1.13-breaking
 
-##Releases
+## Releases
 You can download the latest jar [here](https://github.com/Podcrash/FastAsyncVoxelSniper/releases)
 
-##Compile
+## Compile
 To compile, run `./gradlew build`
 
-##License
+## License
 [MIT License](https://choosealicense.com/licenses/mit/)
