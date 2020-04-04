@@ -3,7 +3,8 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '5.1.0'
 }
 
-group = 'com.thevoxelbox.voxelsniper'
+project.group = 'com.thevoxelbox.voxelsniper'
+project.version = '1.13-breaking'
 
 repositories {
     mavenCentral()
@@ -21,9 +22,5 @@ dependencies {
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-
-ext {
-    version = project.version;
-}
 
 tasks.build.dependsOn tasks.shadowJar

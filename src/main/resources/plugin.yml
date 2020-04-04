@@ -1,6 +1,6 @@
 name: FastAsyncVoxelSniper
 main: com.thevoxelbox.voxelsniper.VoxelSniper
-version: ${version}
+version: 1.13-breaking
 description: Fast Async VoxelSniper
 authors: [Empire92]
 load: STARTUP
