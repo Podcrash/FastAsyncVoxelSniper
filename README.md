@@ -9,4 +9,4 @@ You can download the latest jar [here](https://github.com/Podcrash/FastAsyncVoxe
 To compile, run `./gradlew build`
 
 ## License
-[MIT License](https://choosealicense.com/licenses/mit/)
+Whatever license was on old FAVS and the original VoxelSniper
